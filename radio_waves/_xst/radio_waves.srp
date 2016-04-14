@@ -1,0 +1,559 @@
+Release 10.1 - xst K.31 (lin)
+Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
+--> 
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Compilation
+  3) Design Hierarchy Analysis
+  4) HDL Analysis
+  5) HDL Synthesis
+     5.1) HDL Synthesis Report
+  6) Advanced HDL Synthesis
+     6.1) Advanced HDL Synthesis Report
+  7) Low Level Synthesis
+  8) Partition Report
+  9) Final Report
+     9.1) Device utilization summary
+     9.2) Partition Resource Summary
+     9.3) TIMING REPORT
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "radio_waves.prj"
+
+---- Target Parameters
+Target Device                      : xc3s500e-4-fg320
+Output File Name                   : "radio_waves.ngc"
+
+---- Source Options
+Entity Name                        : tlc
+Top Module Name                    : tlc
+
+=========================================================================
+
+WARNING:Xst:29 - Optimization Effort not specified
+The following parameters have been added:
+Optimization Goal                  : SPEED
+Optimization Effort                : 1
+
+=========================================================================
+
+=========================================================================
+*                          HDL Compilation                              *
+=========================================================================
+Compiling vhdl file "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" in Library work.
+Architecture structural of Entity tlc is up to date.
+
+=========================================================================
+*                     Design Hierarchy Analysis                         *
+=========================================================================
+Analyzing hierarchy for entity <tlc> in library <work> (architecture <structural>).
+
+
+=========================================================================
+*                            HDL Analysis                               *
+=========================================================================
+Analyzing Entity <tlc> in library <work> (Architecture <structural>).
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLK0' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLK90' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLK180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLK270' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLK2X' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLK2X180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLKDV' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'CLKFX180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'LOCKED' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'PSDONE' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Unconnected output port 'STATUS' of component 'DCM'.
+WARNING:Xst:2211 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 101: Instantiating black box module <DCM>.
+    Set user-defined property "CLKFX_DIVIDE =  1" for instance <U0> in unit <tlc>.
+    Set user-defined property "CLKFX_MULTIPLY =  2" for instance <U0> in unit <tlc>.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLK0' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLK90' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLK180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLK270' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLK2X' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLK2X180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLKDV' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'CLKFX180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'LOCKED' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'PSDONE' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Unconnected output port 'STATUS' of component 'DCM'.
+WARNING:Xst:2211 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 111: Instantiating black box module <DCM>.
+    Set user-defined property "CLKFX_DIVIDE =  10" for instance <U1> in unit <tlc>.
+    Set user-defined property "CLKFX_MULTIPLY =  2" for instance <U1> in unit <tlc>.
+WARNING:Xst:2211 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 121: Instantiating black box module <BUFG>.
+WARNING:Xst:2211 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 122: Instantiating black box module <BUFG>.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLK0' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLK90' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLK180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLK270' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLK2X' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLK2X180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLKDV' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'CLKFX180' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'LOCKED' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'PSDONE' of component 'DCM'.
+WARNING:Xst:753 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Unconnected output port 'STATUS' of component 'DCM'.
+WARNING:Xst:2211 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 124: Instantiating black box module <DCM>.
+    Set user-defined property "CLKFX_DIVIDE =  5" for instance <U2> in unit <tlc>.
+    Set user-defined property "CLKFX_MULTIPLY =  16" for instance <U2> in unit <tlc>.
+WARNING:Xst:2211 - "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd" line 134: Instantiating black box module <BUFG>.
+Entity <tlc> analyzed. Unit <tlc> generated.
+
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Performing bidirectional port resolution...
+INFO:Xst:2561 - Always blocking tristate driving signal <DATA> in unit <tlc> is removed.
+
+Synthesizing Unit <tlc>.
+    Related source file is "/home/iocoder/school/networks/project/radio_waves/src/tlc.vhd".
+WARNING:Xst:1306 - Output <JA<7:1>> is never assigned.
+WARNING:Xst:1306 - Output <G> is never assigned.
+WARNING:Xst:1306 - Output <R> is never assigned.
+WARNING:Xst:647 - Input <SW<7:2>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <SW<0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <MT_WAIT> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <ST_STS> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:1306 - Output <LED> is never assigned.
+WARNING:Xst:646 - Signal <PWM> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:653 - Signal <GND> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+WARNING:Xst:1780 - Signal <CLK1MHz> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <CLK10MHz> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+    Found 32-bit up counter for signal <address>.
+    Found 20-bit up counter for signal <beep_counter>.
+    Found 1-bit register for signal <CLK8KHz>.
+    Found 32-bit up counter for signal <counter1>.
+    Found 34-bit register for signal <message>.
+    Found 32-bit up accumulator for signal <phase_accumulator>.
+    Found 32-bit adder for signal <phase_accumulator$add0000>.
+    Found 8x14-bit multiplier for signal <phase_accumulator$mult0001> created at line 173.
+    Found 32-bit up counter for signal <pwm_counter>.
+    Found 5-bit up counter for signal <shift_ctr>.
+    Found 8-bit register for signal <wavdata>.
+    Summary:
+	inferred   5 Counter(s).
+	inferred   1 Accumulator(s).
+	inferred  43 D-type flip-flop(s).
+	inferred   1 Adder/Subtractor(s).
+	inferred   1 Multiplier(s).
+Unit <tlc> synthesized.
+
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# Multipliers                                          : 1
+ 8x14-bit multiplier                                   : 1
+# Adders/Subtractors                                   : 1
+ 32-bit adder                                          : 1
+# Counters                                             : 5
+ 20-bit up counter                                     : 1
+ 32-bit up counter                                     : 3
+ 5-bit up counter                                      : 1
+# Accumulators                                         : 1
+ 32-bit up accumulator                                 : 1
+# Registers                                            : 3
+ 1-bit register                                        : 1
+ 34-bit register                                       : 1
+ 8-bit register                                        : 1
+
+=========================================================================
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+Loading device for application Rf_Device from file '3s500e.nph' in environment /opt/Xilinx/10.1/ISE.
+
+Synthesizing (advanced) Unit <tlc>.
+	Found pipelined multiplier on signal <phase_accumulator_mult0001>:
+		- 1 pipeline level(s) found in a register on signal <wavdata>.
+		Pushing register(s) into the multiplier macro.
+INFO:Xst:2385 - HDL ADVISOR - You can improve the performance of the multiplier Mmult_phase_accumulator_mult0001 by adding 1 register level(s).
+Unit <tlc> synthesized (advanced).
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# Multipliers                                          : 1
+ 8x14-bit registered multiplier                        : 1
+# Adders/Subtractors                                   : 1
+ 32-bit adder                                          : 1
+# Counters                                             : 2
+ 32-bit up counter                                     : 2
+# Accumulators                                         : 1
+ 32-bit up accumulator                                 : 1
+# Registers                                            : 1
+ Flip-Flops                                            : 1
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+WARNING:Xst:2677 - Node <address_24> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_25> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_26> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_27> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_28> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_29> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_30> of sequential type is unconnected in block <tlc>.
+WARNING:Xst:2677 - Node <address_31> of sequential type is unconnected in block <tlc>.
+INFO:Xst:1901 - Instance U0 in unit tlc of type DCM has been replaced by DCM_SP
+INFO:Xst:1901 - Instance U1 in unit tlc of type DCM has been replaced by DCM_SP
+INFO:Xst:1901 - Instance U2 in unit tlc of type DCM has been replaced by DCM_SP
+
+Optimizing unit <tlc> ...
+
+Mapping all equations...
+Building and optimizing final netlist ...
+
+Final Macro Processing ...
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 89
+ Flip-Flops                                            : 89
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                             *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Final Report                               *
+=========================================================================
+Final Results
+Top Level Output File Name         : radio_waves.ngc
+Output Format                      : ngc
+Optimization Goal                  : SPEED
+Keep Hierarchy                     : no
+
+Design Statistics
+# IOs                              : 85
+
+Cell Usage :
+# BELS                             : 354
+#      GND                         : 1
+#      INV                         : 16
+#      LUT1                        : 70
+#      LUT2                        : 25
+#      LUT3                        : 8
+#      LUT4                        : 8
+#      MUXCY                       : 117
+#      VCC                         : 1
+#      XORCY                       : 108
+# FlipFlops/Latches                : 89
+#      FD                          : 32
+#      FDE                         : 25
+#      FDR                         : 32
+# Clock Buffers                    : 4
+#      BUFG                        : 4
+# IO Buffers                       : 53
+#      IBUF                        : 17
+#      IBUFG                       : 1
+#      OBUF                        : 35
+# DCMs                             : 3
+#      DCM_SP                      : 3
+# MULTs                            : 1
+#      MULT18X18SIO                : 1
+=========================================================================
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 3s500efg320-4 
+
+ Number of Slices:                       65  out of   4656     1%  
+ Number of Slice Flip Flops:             89  out of   9312     0%  
+ Number of 4 input LUTs:                127  out of   9312     1%  
+ Number of IOs:                          85
+ Number of bonded IOBs:                  53  out of    232    22%  
+ Number of MULT18X18SIOs:                 1  out of     20     5%  
+ Number of GCLKs:                         4  out of     24    16%  
+ Number of DCMs:                          3  out of      4    75%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+TIMING REPORT
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+-----------------------------------+------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)  | Load  |
+-----------------------------------+------------------------+-------+
+CLKFX1                             | BUFG                   | 33    |
+CLK8KHz1                           | BUFG                   | 25    |
+CLKFX3                             | BUFG                   | 32    |
+-----------------------------------+------------------------+-------+
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -4
+
+   Minimum period: 5.240ns (Maximum Frequency: 190.857MHz)
+   Minimum input arrival time before clock: 3.213ns
+   Maximum output required time after clock: 4.745ns
+   Maximum combinational path delay: 3.140ns
+
+Timing Detail:
+--------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'CLKFX1'
+  Clock period: 5.240ns (frequency: 190.857MHz)
+  Total number of paths / destination ports: 1585 / 66
+-------------------------------------------------------------------------
+Delay:               5.240ns (Levels of Logic = 9)
+  Source:            counter1_8 (FF)
+  Destination:       counter1_0 (FF)
+  Source Clock:      CLKFX1 rising
+  Destination Clock: CLKFX1 rising
+
+  Data Path: counter1_8 to counter1_0
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDR:C->Q              2   0.591   0.622  counter1_8 (counter1_8)
+     LUT4:I0->O            1   0.704   0.000  CLK8KHz_cmp_eq0000_wg_lut<0> (CLK8KHz_cmp_eq0000_wg_lut<0>)
+     MUXCY:S->O            1   0.464   0.000  CLK8KHz_cmp_eq0000_wg_cy<0> (CLK8KHz_cmp_eq0000_wg_cy<0>)
+     MUXCY:CI->O           1   0.059   0.000  CLK8KHz_cmp_eq0000_wg_cy<1> (CLK8KHz_cmp_eq0000_wg_cy<1>)
+     MUXCY:CI->O           1   0.059   0.000  CLK8KHz_cmp_eq0000_wg_cy<2> (CLK8KHz_cmp_eq0000_wg_cy<2>)
+     MUXCY:CI->O           1   0.059   0.000  CLK8KHz_cmp_eq0000_wg_cy<3> (CLK8KHz_cmp_eq0000_wg_cy<3>)
+     MUXCY:CI->O           1   0.059   0.000  CLK8KHz_cmp_eq0000_wg_cy<4> (CLK8KHz_cmp_eq0000_wg_cy<4>)
+     MUXCY:CI->O           1   0.059   0.000  CLK8KHz_cmp_eq0000_wg_cy<5> (CLK8KHz_cmp_eq0000_wg_cy<5>)
+     MUXCY:CI->O           1   0.059   0.000  CLK8KHz_cmp_eq0000_wg_cy<6> (CLK8KHz_cmp_eq0000_wg_cy<6>)
+     MUXCY:CI->O          33   0.331   1.263  CLK8KHz_cmp_eq0000_wg_cy<7> (CLK8KHz_cmp_eq0000)
+     FDR:R                     0.911          counter1_0
+    ----------------------------------------
+    Total                      5.240ns (3.355ns logic, 1.885ns route)
+                                       (64.0% logic, 36.0% route)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'CLK8KHz1'
+  Clock period: 5.051ns (frequency: 197.981MHz)
+  Total number of paths / destination ports: 308 / 32
+-------------------------------------------------------------------------
+Delay:               5.051ns (Levels of Logic = 25)
+  Source:            address_0 (FF)
+  Destination:       address_23 (FF)
+  Source Clock:      CLK8KHz1 rising
+  Destination Clock: CLK8KHz1 rising
+
+  Data Path: address_0 to address_23
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDE:C->Q             10   0.591   0.882  address_0 (address_0)
+     INV:I->O              2   0.704   0.000  Mcount_address_lut<0>_INV_0 (Mcount_address_lut<0>)
+     MUXCY:S->O            1   0.464   0.000  Mcount_address_cy<0> (Mcount_address_cy<0>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<1> (Mcount_address_cy<1>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<2> (Mcount_address_cy<2>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<3> (Mcount_address_cy<3>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<4> (Mcount_address_cy<4>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<5> (Mcount_address_cy<5>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<6> (Mcount_address_cy<6>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<7> (Mcount_address_cy<7>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<8> (Mcount_address_cy<8>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<9> (Mcount_address_cy<9>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<10> (Mcount_address_cy<10>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<11> (Mcount_address_cy<11>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<12> (Mcount_address_cy<12>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<13> (Mcount_address_cy<13>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<14> (Mcount_address_cy<14>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<15> (Mcount_address_cy<15>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<16> (Mcount_address_cy<16>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<17> (Mcount_address_cy<17>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<18> (Mcount_address_cy<18>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<19> (Mcount_address_cy<19>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<20> (Mcount_address_cy<20>)
+     MUXCY:CI->O           1   0.059   0.000  Mcount_address_cy<21> (Mcount_address_cy<21>)
+     MUXCY:CI->O           0   0.059   0.000  Mcount_address_cy<22> (Mcount_address_cy<22>)
+     XORCY:CI->O           1   0.804   0.000  Mcount_address_xor<23> (Result<23>)
+     FDE:D                     0.308          address_23
+    ----------------------------------------
+    Total                      5.051ns (4.169ns logic, 0.882ns route)
+                                       (82.5% logic, 17.5% route)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'CLKFX3'
+  Clock period: 5.140ns (frequency: 194.553MHz)
+  Total number of paths / destination ports: 1003 / 32
+-------------------------------------------------------------------------
+Delay:               5.140ns (Levels of Logic = 33)
+  Source:            phase_accumulator_0 (FF)
+  Destination:       phase_accumulator_31 (FF)
+  Source Clock:      CLKFX3 rising
+  Destination Clock: CLKFX3 rising
+
+  Data Path: phase_accumulator_0 to phase_accumulator_31
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD:C->Q               1   0.591   0.499  phase_accumulator_0 (phase_accumulator_0)
+     LUT2:I1->O            2   0.704   0.000  Maccum_phase_accumulator_lut<0> (Maccum_phase_accumulator_lut<0>)
+     MUXCY:S->O            1   0.464   0.000  Maccum_phase_accumulator_cy<0> (Maccum_phase_accumulator_cy<0>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<1> (Maccum_phase_accumulator_cy<1>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<2> (Maccum_phase_accumulator_cy<2>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<3> (Maccum_phase_accumulator_cy<3>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<4> (Maccum_phase_accumulator_cy<4>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<5> (Maccum_phase_accumulator_cy<5>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<6> (Maccum_phase_accumulator_cy<6>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<7> (Maccum_phase_accumulator_cy<7>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<8> (Maccum_phase_accumulator_cy<8>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<9> (Maccum_phase_accumulator_cy<9>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<10> (Maccum_phase_accumulator_cy<10>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<11> (Maccum_phase_accumulator_cy<11>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<12> (Maccum_phase_accumulator_cy<12>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<13> (Maccum_phase_accumulator_cy<13>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<14> (Maccum_phase_accumulator_cy<14>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<15> (Maccum_phase_accumulator_cy<15>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<16> (Maccum_phase_accumulator_cy<16>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<17> (Maccum_phase_accumulator_cy<17>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<18> (Maccum_phase_accumulator_cy<18>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<19> (Maccum_phase_accumulator_cy<19>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<20> (Maccum_phase_accumulator_cy<20>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<21> (Maccum_phase_accumulator_cy<21>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<22> (Maccum_phase_accumulator_cy<22>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<23> (Maccum_phase_accumulator_cy<23>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<24> (Maccum_phase_accumulator_cy<24>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<25> (Maccum_phase_accumulator_cy<25>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<26> (Maccum_phase_accumulator_cy<26>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<27> (Maccum_phase_accumulator_cy<27>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<28> (Maccum_phase_accumulator_cy<28>)
+     MUXCY:CI->O           1   0.059   0.000  Maccum_phase_accumulator_cy<29> (Maccum_phase_accumulator_cy<29>)
+     MUXCY:CI->O           0   0.059   0.000  Maccum_phase_accumulator_cy<30> (Maccum_phase_accumulator_cy<30>)
+     XORCY:CI->O           1   0.804   0.000  Maccum_phase_accumulator_xor<31> (Result<31>2)
+     FD:D                      0.308          phase_accumulator_31
+    ----------------------------------------
+    Total                      5.140ns (4.641ns logic, 0.499ns route)
+                                       (90.3% logic, 9.7% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'CLK8KHz1'
+  Total number of paths / destination ports: 41 / 33
+-------------------------------------------------------------------------
+Offset:              3.213ns (Levels of Logic = 1)
+  Source:            SW<1> (PAD)
+  Destination:       Mmult_phase_accumulator_mult0001 (MULT)
+  Destination Clock: CLK8KHz1 rising
+
+  Data Path: SW<1> to Mmult_phase_accumulator_mult0001
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            25   1.218   1.260  SW_1_IBUF (SW_1_IBUF)
+     MULT18X18SIO:CEA          0.735          Mmult_phase_accumulator_mult0001
+    ----------------------------------------
+    Total                      3.213ns (1.953ns logic, 1.260ns route)
+                                       (60.8% logic, 39.2% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'CLK8KHz1'
+  Total number of paths / destination ports: 24 / 24
+-------------------------------------------------------------------------
+Offset:              4.745ns (Levels of Logic = 1)
+  Source:            address_0 (FF)
+  Destination:       ADDR<0> (PAD)
+  Source Clock:      CLK8KHz1 rising
+
+  Data Path: address_0 to ADDR<0>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDE:C->Q             10   0.591   0.882  address_0 (address_0)
+     OBUF:I->O                 3.272          ADDR_0_OBUF (ADDR<0>)
+    ----------------------------------------
+    Total                      4.745ns (3.863ns logic, 0.882ns route)
+                                       (81.4% logic, 18.6% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'CLKFX3'
+  Total number of paths / destination ports: 1 / 1
+-------------------------------------------------------------------------
+Offset:              4.310ns (Levels of Logic = 1)
+  Source:            phase_accumulator_31 (FF)
+  Destination:       JA<0> (PAD)
+  Source Clock:      CLKFX3 rising
+
+  Data Path: phase_accumulator_31 to JA<0>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD:C->Q               2   0.591   0.447  phase_accumulator_31 (phase_accumulator_31)
+     OBUF:I->O                 3.272          JA_0_OBUF (JA<0>)
+    ----------------------------------------
+    Total                      4.310ns (3.863ns logic, 0.447ns route)
+                                       (89.6% logic, 10.4% route)
+
+=========================================================================
+Timing constraint: Default path analysis
+  Total number of paths / destination ports: 3 / 3
+-------------------------------------------------------------------------
+Delay:               3.140ns (Levels of Logic = 1)
+  Source:            U0:CLKFX (PAD)
+  Destination:       U2:CLKIN (PAD)
+
+  Data Path: U0:CLKFX to U2:CLKIN
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+    DCM_SP:CLKFX           1   0.000   0.420  U0 (CLKFX1)
+     BUFG:I->O            33   1.457   1.263  B0 (CLK100MHz)
+    DCM_SP:CLKIN               0.000          U2
+    ----------------------------------------
+    Total                      3.140ns (1.457ns logic, 1.683ns route)
+                                       (46.4% logic, 53.6% route)
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 2.00 secs
+Total CPU time to Xst completion: 1.99 secs
+ 
+--> 
+
+
+Total memory usage is 147724 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :   60 (   0 filtered)
+Number of infos    :    5 (   0 filtered)
+

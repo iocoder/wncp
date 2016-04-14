@@ -1,0 +1,1 @@
+run -ifn radio_waves.prj -p xc3s500e-4-fg320 -ofn radio_waves.ngc               -ent tlc -top tlc

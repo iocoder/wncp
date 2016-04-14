@@ -1,0 +1,8 @@
+V3 5
+FL /home/iocoder/school/networks/project/radio_waves/src/tlc.vhd 2016/03/11.18:50:55 K.31
+EN work/tlc 1457717497 \
+      FL /home/iocoder/school/networks/project/radio_waves/src/tlc.vhd \
+      PB ieee/std_logic_1164 1200023565 PH ieee/NUMERIC_STD 1200023568
+AR work/TLC/Structural 1457717498 \
+      FL /home/iocoder/school/networks/project/radio_waves/src/tlc.vhd \
+      EN work/tlc 1457717497 CP DCM CP BUFG

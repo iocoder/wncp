@@ -1,0 +1,3 @@
+NET "clk32"       LOC = "B8";
+NET "antenna"     LOC = "L15";
+

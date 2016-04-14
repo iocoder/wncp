@@ -1,0 +1,207 @@
+# Pin Assignments
+
+##############################
+#          CLOCK             #
+##############################
+
+NET "CLK"       LOC = "B8";
+
+##############################
+#         BUTTONS            #
+##############################
+
+# NET "BTN<0>"    LOC = "B18";
+# NET "BTN<1>"    LOC = "D18";
+# NET "BTN<2>"    LOC = "E18";
+# NET "BTN<3>"    LOC = "H13";
+
+##############################
+#         SWITCHES           #
+##############################
+
+NET "SW<0>"     LOC = "G18";
+NET "SW<1>"     LOC = "H18";
+NET "SW<2>"     LOC = "K18";
+NET "SW<3>"     LOC = "K17";
+NET "SW<4>"     LOC = "L14";
+NET "SW<5>"     LOC = "L13";
+NET "SW<6>"     LOC = "N17";
+NET "SW<7>"     LOC = "R17";
+
+##############################
+#           LED              #
+##############################
+
+# NET "led<0>"    LOC = "J14";
+# NET "led<1>"    LOC = "J15";
+# NET "led<2>"    LOC = "K15";
+# NET "led<3>"    LOC = "K14";
+# NET "led<4>"    LOC = "E17";
+# NET "led<5>"    LOC = "P15";
+# NET "led<6>"    LOC = "F4" ;
+# NET "led<7>"    LOC = "R4" ;
+
+##############################
+#            AN              #
+##############################
+
+# AN<0>: Left most Sev-seg LED
+# NET "AN<0>"     LOC = "F17";
+# NET "AN<1>"     LOC = "H17";
+# NET "AN<2>"     LOC = "C18";
+# NET "AN<3>"     LOC = "F15";
+
+##############################
+#         SEV SEG            #
+##############################
+
+# SEG<0>: A, SEG<1>: B, ...SEG<7>: DP
+# NET "SEG<0>"    LOC = "L18";
+# NET "SEG<1>"    LOC = "F18";
+# NET "SEG<2>"    LOC = "D17";
+# NET "SEG<3>"    LOC = "D16";
+# NET "SEG<4>"    LOC = "G14";
+# NET "SEG<5>"    LOC = "J17";
+# NET "SEG<6>"    LOC = "H14";
+# NET "SEG<7>"    LOC = "C17";
+
+##############################
+#           VGA              #
+##############################
+
+# NET "HS"        LOC = "T4";
+# NET "VS"        LOC = "U3";
+# NET "R<0>"      LOC = "R9";
+# NET "R<1>"      LOC = "T8";
+# NET "R<2>"      LOC = "R8";
+# NET "G<0>"      LOC = "N8";
+# NET "G<1>"      LOC = "P8";
+# NET "G<2>"      LOC = "P6";
+# NET "B<0>"      LOC = "U5";
+# NET "B<1>"      LOC = "U4";
+
+##############################
+#         MEM ADDR           #
+##############################
+
+NET "ADDR<1>"   LOC = "J1" ;
+NET "ADDR<2>"   LOC = "J2" ;
+NET "ADDR<3>"   LOC = "H4" ;
+NET "ADDR<4>"   LOC = "H1" ;
+NET "ADDR<5>"   LOC = "H2" ;
+NET "ADDR<6>"   LOC = "J5" ;
+NET "ADDR<7>"   LOC = "H3" ;
+NET "ADDR<8>"   LOC = "H6" ;
+NET "ADDR<9>"   LOC = "F1" ;
+NET "ADDR<10>"  LOC = "G3" ;
+NET "ADDR<11>"  LOC = "G6" ;
+NET "ADDR<12>"  LOC = "G5" ;
+NET "ADDR<13>"  LOC = "G4" ;
+NET "ADDR<14>"  LOC = "F2" ;
+NET "ADDR<15>"  LOC = "E1" ;
+NET "ADDR<16>"  LOC = "M5" ;
+NET "ADDR<17>"  LOC = "E2" ;
+NET "ADDR<18>"  LOC = "C2" ;
+NET "ADDR<19>"  LOC = "C1" ;
+NET "ADDR<20>"  LOC = "D2" ;
+NET "ADDR<21>"  LOC = "K3" ;
+NET "ADDR<22>"  LOC = "D1" ;
+NET "ADDR<23>"  LOC = "K6" ;
+
+##############################
+#         MEM DATA           #
+##############################
+
+NET "DATA<0>"   LOC = "L1" ;
+NET "DATA<1>"   LOC = "L4" ;
+NET "DATA<2>"   LOC = "L6" ;
+NET "DATA<3>"   LOC = "M4" ;
+NET "DATA<4>"   LOC = "N5" ;
+NET "DATA<5>"   LOC = "P1" ;
+NET "DATA<6>"   LOC = "P2" ;
+NET "DATA<7>"   LOC = "R2" ;
+NET "DATA<8>"   LOC = "L3" ;
+NET "DATA<9>"   LOC = "L5" ;
+NET "DATA<10>"  LOC = "M3" ;
+NET "DATA<11>"  LOC = "M6" ;
+NET "DATA<12>"  LOC = "L2" ;
+NET "DATA<13>"  LOC = "N4" ;
+NET "DATA<14>"  LOC = "R3" ;
+NET "DATA<15>"  LOC = "T1" ;
+
+##############################
+#         MEM CTRL           #
+##############################
+
+NET "OE"        LOC = "T2" ;
+NET "WE"        LOC = "N7" ;
+
+##############################
+#         RAM CTRL           #
+##############################
+
+NET "MT_ADV"    LOC = "J4" ;
+NET "MT_CLK"    LOC = "H5" ;
+NET "MT_UB"     LOC = "K4" ;
+NET "MT_LB"     LOC = "K5" ;
+NET "MT_CE"     LOC = "R6" ;
+NET "MT_CRE"    LOC = "P7" ;
+NET "MT_WAIT"   LOC = "F5" ;
+
+##############################
+#         ROM CTRL           #
+##############################
+
+NET "ST_STS"    LOC = "D3" ;
+NET "RP"        LOC = "T5" ;
+NET "ST_CE"     LOC = "R5" ;
+
+##############################
+#           PS2              #
+##############################
+
+# NET "PS2CLK"    LOC = "R12";
+# NET "PS2DATA"   LOC = "P11";
+
+##############################
+#           USB              #
+##############################
+
+# NET "EppAstb"   LOC = "V14";
+# NET "EppDstb"   LOC = "U14";
+# NET "UsbDB<0>"  LOC = "R14";
+# NET "UsbDB<1>"  LOC = "R13";
+# NET "UsbDB<2>"  LOC = "P13";
+# NET "UsbDB<3>"  LOC = "T12";
+# NET "UsbDB<4>"  LOC = "N11";
+# NET "UsbDB<5>"  LOC = "R11";
+# NET "UsbDB<6>"  LOC = "P10";
+# NET "UsbDB<7>"  LOC = "R10";
+# NET "EppWait"   LOC = "N9" ;
+# NET "UsbMode"   LOC = "U15";
+# NET "UsbFlag"   LOC = "V16";
+# NET "UsbDir"    LOC = "T16";
+# NET "UsbClk"    LOC = "T15";
+# NET "UsbOE"     LOC = "V15";
+# NET "UsbWR"     LOC = "V9" ;
+# NET "UsbPktEnd" LOC = "V12";
+# NET "UsbAdr<0>" LOC = "T14";
+# NET "UsbAdr<1>" LOC = "V13";
+# NET "UsbRdy"    LOC = "U13";
+
+##############################
+#            JA              #
+##############################
+
+NET "JA<0>"     LOC = "L15";
+# NET "JA<1>"     LOC = "K12";
+# NET "JA<2>"     LOC = "L17";
+# NET "JA<3>"     LOC = "M15";
+# NET "JA<4>"     LOC = "K13";
+# NET "JA<5>"     LOC = "L16";
+# NET "JA<6>"     LOC = "M14";
+# NET "JA<7>"     LOC = "M16";
+
+##############################
+#     TIME CONSTRAINTS       #
+##############################

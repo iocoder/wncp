@@ -1,0 +1,39 @@
+Release 10.1 ngdbuild K.31 (lin)
+Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
+
+Command Line: /opt/Xilinx/10.1/ISE/bin/lin/unwrapped/ngdbuild -dd _ngo -nt
+timestamp -p xc3s500e-4-fg320 -uc
+/home/iocoder/school/networks/project/radio_waves/src/radio_waves.ucf
+../_xst/radio_waves.ngc radio_waves.ngd
+
+Reading NGO file "/home/Files/Documents/foe/BSc in CSE/Semester
+10/networks/project/radio_waves/_xst/radio_waves.ngc" ...
+Gathering constraint information from source properties...
+Done.
+
+Applying constraints in
+"/home/iocoder/school/networks/project/radio_waves/src/radio_waves.ucf" to the
+design...
+Resolving constraint associations...
+Checking Constraint Associations...
+Done...
+Checking Partitions ...
+
+Checking expanded design ...
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+NGDBUILD Design Results Summary:
+  Number of errors:     0
+  Number of warnings:   0
+
+Total memory usage is 71860 kilobytes
+
+Writing NGD file "radio_waves.ngd" ...
+
+Writing NGDBUILD log file "radio_waves.bld"...
