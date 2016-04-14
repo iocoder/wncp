@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Thu Apr 14 16:27:46 2016
+# Generated: Thu Apr 14 17:38:16 2016
 ##################################################
 
 from gnuradio import blocks
@@ -41,7 +41,7 @@ class top_block(gr.top_block):
         )
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_center_freq(1241e6, 0)
-        self.uhd_usrp_sink_0.set_gain(0, 0)
+        self.uhd_usrp_sink_0.set_gain(100, 0)
         self.digital_psk_mod_0 = digital.psk.psk_mod(
           constellation_points=2,
           mod_code="gray",
