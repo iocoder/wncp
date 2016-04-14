@@ -3,18 +3,8 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Thu Apr 14 14:44:17 2016
+# Generated: Thu Apr 14 16:27:46 2016
 ##################################################
-
-if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print "Warning: failed to XInitThreads()"
 
 from gnuradio import blocks
 from gnuradio import digital
@@ -24,17 +14,15 @@ from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from grc_gnuradio import blks2 as grc_blks2
-from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
 import numpy
 import time
-import wx
 
 
-class top_block(grc_wxgui.top_block_gui):
+class top_block(gr.top_block):
 
     def __init__(self):
-        grc_wxgui.top_block_gui.__init__(self, title="Top Block")
+        gr.top_block.__init__(self, "Top Block")
 
         ##################################################
         # Variables
@@ -94,8 +82,13 @@ class top_block(grc_wxgui.top_block_gui):
 def main(top_block_cls=top_block, options=None):
 
     tb = top_block_cls()
-    tb.Start(True)
-    tb.Wait()
+    tb.start()
+    try:
+        raw_input('Press Enter to quit: ')
+    except EOFError:
+        pass
+    tb.stop()
+    tb.wait()
 
 
 if __name__ == '__main__':
