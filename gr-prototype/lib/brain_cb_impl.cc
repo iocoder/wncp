@@ -27,7 +27,9 @@
 #include <gnuradio/io_signature.h>
 #include "brain_cb_impl.h"
 
-int cnt = 0;
+#define MIN(a,b) (a<b?a:b)
+
+int cnt = 0, calls = 0;
 
 namespace gr {
   namespace prototype {
@@ -35,8 +37,7 @@ namespace gr {
     brain_cb::sptr
     brain_cb::make()
     {
-      return gnuradio::get_initial_sptr
-        (new brain_cb_impl());
+        return gnuradio::get_initial_sptr(new brain_cb_impl());
     }
 
     /*
@@ -44,10 +45,9 @@ namespace gr {
      */
     brain_cb_impl::brain_cb_impl()
       : gr::block("brain_cb",
-              gr::io_signature::make(0, 10, sizeof(int)), /* input */
-              gr::io_signature::make(0, 10, sizeof(int))) /* output */
+              gr::io_signature::make(0, 1, sizeof(char)), /* input */
+              gr::io_signature::make(1, 1, sizeof(char))) /* output */
     {
-        printf("Hello World!\n");
     }
 
     /*
@@ -60,7 +60,10 @@ namespace gr {
     void
     brain_cb_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-      /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
+        /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
+        unsigned ninputs = ninput_items_required.size();
+        for(unsigned i = 0; i < ninputs; i++)
+            ninput_items_required[i] = noutput_items;
     }
 
     int
@@ -69,17 +72,38 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      printf("%d\n", cnt++);
-      const int *in = (const int *) input_items[0];
-      int *out = (int *) output_items[0];
+        int _ninput_items = ninput_items[0];
+        int _noutput_items = noutput_items;
+        const char *in = (const char *) input_items[0];
+        char *out = (char *) output_items[0];
+        int consumption = MIN(_ninput_items, _noutput_items);
 
-      // Do <+signal processing+>
-      // Tell runtime system how many input items we consumed on
-      // each input stream.
-      consume_each (noutput_items);
+        // done?
+//         if (cnt == 494) {
+//             printf("No. of calls: %d\n", calls);
+//             return WORK_DONE;
+//         }
 
-      // Tell runtime system how many output items we produced.
-      return noutput_items;
+        // increase no of calls counter
+        calls++;
+
+        // consume input
+        for (int i = 0; i < consumption; i++) {
+            // debug
+            //printf("%c", in[i]);
+
+            // output something
+            out[i] = in[i];
+
+            // increase counter
+            cnt++;
+        }
+
+        // tell runtime system how many input items we consumed
+        consume_each(consumption);
+
+        // tell runtime system how many output items we produced.
+        return consumption;
     }
 
   } /* namespace prototype */
