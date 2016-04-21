@@ -1,0 +1,210 @@
+\documentclass[]{scrartcl}
+
+\title{\LARGE \color{darkgreen}Radio K.A.O.S\color{black}:
+              Cognitive Radio with Dynamic Spectrum Sharing Engine}
+\subtitle{\vspace{3ex} \Large Project Progress Report}
+\author{
+    \large \textit{Mostafa Abd El-Aziz} (67)\\
+}
+\date{\large \today}
+
+% font
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{sfmath}
+\usepackage{microtype}
+\usepackage[utf8]{inputenc}
+% \usepackage{cfr-lm} % font package
+
+% listings
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{mygreen},
+  deletekeywords={...},
+  escapeinside={\%*}{*)},
+  extendedchars=true,
+  frame=single,
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=r,
+  otherkeywords={*,...},
+  numbers=none,
+  numbersep=5pt,
+  numberstyle=\tiny\color{mygray},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=2,
+  stringstyle=\color{mymauve},
+  tabsize=2,
+  title=\lstname
+}
+
+% margins
+\usepackage[margin=3cm,a4paper]{geometry}
+
+% figures and tables
+\usepackage{graphicx}
+\usepackage{float}
+
+% table of contents
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % for chapters
+\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % for parts
+
+% section style
+\usepackage{sectsty}
+\sectionfont{\LARGE}
+
+% page orientation
+\usepackage{lscape}
+
+% hyperlinks
+\usepackage{hyperref}
+
+% colors
+\definecolor{darkgreen}{RGB}{0, 100, 0}
+
+%------------------------------------------------------------------------------%
+
+\begin{document}
+
+% university logo
+\titlehead{
+
+    \small Alexandria University\\
+    \small Faculty of Engineering\\
+    \small Computer and Systems Engineering Department\\
+    \small CS 436 - Topics in Computer Networks
+
+    \vspace{-2.2cm}
+    \hfill
+    \includegraphics[scale=0.6]{logo.png}
+}
+
+% document title
+\maketitle
+
+%------------------------------------------------------------------------------%
+
+\section{GNU Radio}
+
+\begin{itemize}
+
+\item Finished introductory tutorial on
+\newline \url
+{https://gnuradio.org/redmine/projects/gnuradio/wiki/Guided\_Tutorials}
+\newline
+and learned how to use GNU Radio Companion.
+
+\item Implemented a couple of flow graphs to get used to the companion.
+
+\end{itemize}
+
+\section{Readings}
+
+\begin {itemize}
+
+\item T. Charles Clancy, Zhu Ji, Beibei Wang, K. J. Ray Liu.
+      ``\textit{Planning Approach
+      to Dynamic Spectrum Access in Cognitive Radio Networks}''\\
+      \textbf{Summary}:
+      In this paper, an implementation for a general-purpose cognitive radio
+      engine is proposed. The CR engine shall consist of a knowledge base,
+      reasoning engine, and learning engine:
+      \begin{itemize}
+        \item Knowledge base: stores the semantics of dynamic spectrum access
+              in action description language (ADL) as a set of facts and rules
+              (actions).
+        \item Learning engine: manipulates the knowledge base from experience.
+              Learning engine may only be run to train a newly initialized
+              radio, or it could be run periodically as the radio operates.
+        \item Reasoning engine: executes the actions stored in the knowledge
+              base. It keeps evaluating the objective function over
+              all possible choices (all possible available bands and
+              center frequencies). The goal of the objective function
+              is to maximize capacity. A Primary-Prioritized Markov
+              Approach (PPMA) for dynamic spectrum access is proposed,
+              which is based on a fairly simple 8-state finite state machine.
+              The interactions between the primary user (holder of licensed
+              band) and the secondary users (unlicensed users) are modeled as
+              a Primary-Prioritized Continuous-Time Markov Chain (PPCTMC).
+      \end{itemize}
+
+\item Usama Mir,
+      Leila Merghem-Boulahia,
+      Moez Esseghir,
+      D. Gaiti.
+      ``\textit{Dynamic spectrum sharing for cognitive radio networks
+      using multiagent system}''\\
+      \textbf{Summary}:
+      The discusses the details of design of architecture for an ASIP
+      (Application Specific Instruction Processor) for SDR (Software-Defined
+      Radio) with a single bus and dedicated paths. The paper proposes
+      an instruction set with the following instruction groups:
+      \begin{enumerate}
+        \item Arithmetic copy/move instructions
+        \item Integer arithmetic store with constant
+        \item Floating-point Arithmetic store with constant
+        \item Integer branch instructions
+        \item Floating-point branch instructions
+        \item Base-band and channel coding instructions
+      \end{enumerate}
+      Channel coding, decoding, modulation, and demodulation modules
+      are all embedded in the ASIP.
+
+\item Thomas Charles Clancy III,
+      ``\textit{Dynamic Spectrum Access in Cognitive Radio Networks}'',
+      Doctor of Philosophy thesis.\\
+      \textbf{Summary}:
+      I read Chapter 2 which introduces cognitive radio, explains
+      information theory basics behind cognitive radio networks,
+      and finally, shows various multiple access schemes for multiplexing
+      users' communications.
+
+\item Upamanyu Madhow, ``\textit{Introduction to Communication Systems}''\\
+      \textbf{Summary}:
+      This is a textbook that articulates a selection of concepts
+      that the author deems fundamental to communication system design.
+      I read parts of chapter 3 [Analog Communications], and parts of
+      chapter 4 [Digital Modulation].
+
+\end{itemize}
+
+\section{FPGA}
+
+\begin{itemize}
+
+\item Implemented VHDL code to transmit music over FM using FPGA. The code
+      was tested using Spartan-3 FPGA and a radio receiver. This exercise
+      gave us an idea about how FPGAs could be used to modulate and
+      send radio waves.
+
+\end{itemize}
+
+\section{USRPs}
+
+\begin{itemize}
+
+\item On 14 April we have registered an account on SmartCI's Cognitive
+      Radio Cloud (CRC). The CRC currently provides users with up to
+      5 USRPs, 8 wifi interfaces, and 8 RTLs.
+
+\item I learned how to use two of the USRPs to exhange
+      signals: one could send a signal on a carrier frequency, and
+      the other would sense the spectrum and detect a signal on the carrier.
+      The 2 USRPs used where placed in the meeting room @ VTMENA second floor.
+
+\end{itemize}
+
+\end{document}
