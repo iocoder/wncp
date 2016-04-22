@@ -19,6 +19,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -29,7 +30,174 @@
 
 #define MIN(a,b) (a<b?a:b)
 
-int cnt = 0, calls = 0;
+/******************************************************************************/
+/*                         Sender State Machine                               */
+/******************************************************************************/
+
+#define SENDER_IDLE     0
+#define SENDER_SYNC     1
+#define SENDER_ZERO     2
+#define SENDER_LEN      3
+#define SENDER_DATA     4
+
+typedef struct msg_to_send {
+    struct msg_to_send *next;
+    double time;
+    int len;
+    char *msg;
+} msg_to_send_t;
+
+msg_to_send_t *send_buf_head = NULL;
+msg_to_send_t *send_buf_tail = NULL;
+
+int sender_state = SENDER_IDLE;
+int sender_step  = 0;
+
+void sched(double time, const char *msg) {
+    msg_to_send_t *msg_to_send = (msg_to_send_t*) malloc(sizeof(msg_to_send_t));
+    msg_to_send->time = time;
+    msg_to_send->msg = (char *) malloc((msg_to_send->len = strlen(msg))+1);
+    strcpy(msg_to_send->msg, msg);
+    msg_to_send->next = NULL;
+    if (send_buf_head == NULL) {
+        /* empty list */
+        send_buf_head = send_buf_tail = msg_to_send;
+    } else {
+        send_buf_tail->next = msg_to_send;
+        send_buf_tail = msg_to_send;
+    }
+}
+
+int send(char *buf) {
+    switch(sender_state) {
+        case SENDER_IDLE:
+            /* idle time */
+            if (send_buf_head) {
+                /* something to send */
+                sender_state++;
+            } else {
+                /* nothing to send */
+                return 0;
+            }
+        case SENDER_SYNC:
+            /* sync pattern */
+            *buf = 0x55;
+            if (++sender_step == 6) {
+                /* 6*8=48 sync bits sent */
+                sender_state++;
+                sender_step = 0;
+            }
+            break;
+        case SENDER_ZERO:
+            *buf = 0x00;
+            if (++sender_step == 2) {
+                /* 2*8=16 zero bits sent */
+                sender_state++;
+                sender_step = 0;
+            }
+            break;
+        case SENDER_LEN:
+            /* send length */
+            *buf = send_buf_head->len;
+            sender_state++;
+            break;
+        case SENDER_DATA:
+            /* send data */
+            *buf = send_buf_head->msg[sender_step];
+            if (++sender_step == send_buf_head->len) {
+                /* done */
+                sender_state = SENDER_IDLE;
+                sender_step = 0;
+            }
+            break;
+        default:
+            break;
+    }
+    return 1;
+}
+
+/******************************************************************************/
+/*                        Receiver State Machine                              */
+/******************************************************************************/
+
+#define RECV_SYNC     1
+#define RECV_ZERO     2
+#define RECV_LEN      3
+#define RECV_DATA     4
+
+int recv_state = RECV_SYNC;
+int recv_step  = 0;
+int recv_len   = 0;
+char *recv_msg = NULL;
+
+int recv(char bit) {
+    switch(recv_state) {
+        case RECV_SYNC:
+            if (bit == (recv_step&1)) {
+                /* encountered expected bit */
+                if (++recv_step == 6*8) {
+                    /* synced 6*8=48 bits */
+                    recv_state++;
+                    recv_step = 0;
+                }
+            } else {
+                if (bit == 1) {
+                    /* .....01011 */
+                    recv_step = 0;
+                } else {
+                    /* .....10100 */
+                    recv_step = 1;
+                }
+            }
+            break;
+        case RECV_ZERO:
+            if (!bit) {
+                if (++recv_step == 16) {
+                    /* received 16 zero bits */
+                    recv_state++;
+                    recv_step = 0;
+                    recv_len = 0;
+                }
+            } else {
+                if (recv_step == 1) {
+                    /* 010101|01 */
+                    recv_step = 0;
+                } else {
+                    /* ...000001 */
+                    recv_state = RECV_SYNC;
+                    recv_step = 2;
+                }
+            }
+            break;
+        case RECV_LEN:
+            recv_len = (recv_len<<1) | bit;
+            if (++recv_step == 8) {
+                printf("Received (%d): ", recv_len);
+                recv_state++;
+                recv_step = 0;
+                recv_msg = (char *) malloc(recv_len);
+            }
+            break;
+        case RECV_DATA:
+            recv_msg[recv_step/8] = (recv_msg[recv_step/8]<<1)|bit;
+            if (recv_step%8 == 7) {
+                printf("%c", recv_msg[recv_step/8]);
+            }
+            if (++recv_step == recv_len*8) {
+                /* done */
+                printf("\n");
+                recv_state = RECV_SYNC;
+                recv_step = 0;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+/******************************************************************************/
+/*                            GNU Radio Block                                 */
+/******************************************************************************/
 
 namespace gr {
   namespace prototype {
@@ -48,6 +216,7 @@ namespace gr {
               gr::io_signature::make(0, 1, sizeof(char)), /* input */
               gr::io_signature::make(1, 1, sizeof(char))) /* output */
     {
+        sched(0.1, "This message is carried over radio waves!");
     }
 
     /*
@@ -76,34 +245,26 @@ namespace gr {
         int _noutput_items = noutput_items;
         const char *in = (const char *) input_items[0];
         char *out = (char *) output_items[0];
-        int consumption = MIN(_ninput_items, _noutput_items);
-
-        // done?
-//         if (cnt == 494) {
-//             printf("No. of calls: %d\n", calls);
-//             return WORK_DONE;
-//         }
-
-        // increase no of calls counter
-        calls++;
+        int i;
 
         // consume input
-        for (int i = 0; i < consumption; i++) {
-            // debug
-            //printf("%c", in[i]);
-
-            // output something
-            out[i] = in[i];
-
-            // increase counter
-            cnt++;
+        for (i = 0; i < _ninput_items; i++) {
+            recv(in[i]);
         }
 
         // tell runtime system how many input items we consumed
-        consume_each(consumption);
+        consume_each(_ninput_items);
+
+        // output something
+        for (i = 0; i < _noutput_items; i++) {
+            if (!send(&out[i])) {
+                /* nothing to send */
+                break;
+            }
+        }
 
         // tell runtime system how many output items we produced.
-        return consumption;
+        return i;
     }
 
   } /* namespace prototype */

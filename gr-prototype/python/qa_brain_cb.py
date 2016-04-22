@@ -21,6 +21,9 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
+from gnuradio import uhd
+from gnuradio import digital
+import time
 import prototype_swig as prototype
 
 class qa_brain_cb(gr.top_block):
@@ -29,26 +32,59 @@ class qa_brain_cb(gr.top_block):
         # initialize
         gr.top_block.__init__(self, "Top Block")
         # set up sampling rate
-        self.samp_rate = 1
-        # instantiate file source
-        src = blocks.file_source(itemsize=1,filename="/mnt/wncp/README")
+        self.samp_rate = 100000
+        # instantiate usrp source
+        usrc = uhd.usrp_source(
+            ",".join(("", "")),
+            uhd.stream_args(cpu_format="fc32",channels=range(1))
+        )
+        usrc.set_samp_rate(self.samp_rate)
+        usrc.set_gain(100, 0)
+        usrc.set_center_freq(1.241e9, 0)
+        # instantiate psk demodulator
+        demod = digital.psk.psk_demod(
+          constellation_points=2,
+          differential=True,
+          samples_per_symbol=2,
+          excess_bw=0.35,
+          phase_bw=6.28/100.0,
+          timing_bw=6.28/100.0,
+          mod_code="gray",
+          verbose=False,
+          log=False
+        )
+        # instantiate psk modulator
+        usnk = uhd.usrp_sink(
+            ",".join(("", "")),
+            uhd.stream_args(cpu_format="fc32",channels=range(1)),
+        )
+        usnk.set_samp_rate(self.samp_rate)
+        usnk.set_gain(100, 0)
+        usnk.set_center_freq(1.241e9, 0)
+        mod = digital.psk.psk_mod(
+          constellation_points=2,
+          mod_code="gray",
+          differential=True,
+          samples_per_symbol=2,
+          excess_bw=0.35,
+          verbose=False,
+          log=False,
+        )
         # instantiate file sink
-        snk = blocks.file_sink(itemsize=1,filename="/tmp/README")
-        # instantiate the binary sink
-        dst = blocks.null_sink(1)
-        # instantiate the block
+        fsnk = blocks.file_sink(itemsize=1,filename="/tmp/README")
+        # instantiate our block
         blk = prototype.brain_cb()
         # connections
-        self.connect(src, blk)
-        self.connect(blk, snk)
+        self.connect(usrc,  demod)
+        self.connect(demod, fsnk)
+        self.connect(demod, blk)
+        self.connect(blk,   mod)
+        self.connect(mod,   usnk)
 
 def main():
     tb = qa_brain_cb()
     tb.start()
-    try:
-        raw_input()
-    except EOFError:
-        pass
+    time.sleep(1)
     tb.stop()
     tb.wait()
 
