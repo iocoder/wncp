@@ -32,7 +32,7 @@ class qa_brain_cb(gr.top_block):
         # initialize
         gr.top_block.__init__(self, "Top Block")
         # set up sampling rate
-        self.samp_rate = 100000
+        self.samp_rate = 0.5e6
         # instantiate usrp source
         usrc = uhd.usrp_source(
             ",".join(("", "")),
@@ -45,7 +45,7 @@ class qa_brain_cb(gr.top_block):
         demod = digital.psk.psk_demod(
           constellation_points=2,
           differential=True,
-          samples_per_symbol=2,
+          samples_per_symbol=4,
           excess_bw=0.35,
           phase_bw=6.28/100.0,
           timing_bw=6.28/100.0,
@@ -53,7 +53,19 @@ class qa_brain_cb(gr.top_block):
           verbose=False,
           log=False
         )
+        # instantiate our block
+        blk = prototype.brain_cb()
         # instantiate psk modulator
+        mod = digital.psk.psk_mod(
+          constellation_points=2,
+          mod_code="gray",
+          differential=True,
+          samples_per_symbol=4,
+          excess_bw=0.35,
+          verbose=False,
+          log=False,
+        )
+        # instantiate usrp sink
         usnk = uhd.usrp_sink(
             ",".join(("", "")),
             uhd.stream_args(cpu_format="fc32",channels=range(1)),
@@ -61,19 +73,8 @@ class qa_brain_cb(gr.top_block):
         usnk.set_samp_rate(self.samp_rate)
         usnk.set_gain(100, 0)
         usnk.set_center_freq(1.241e9, 0)
-        mod = digital.psk.psk_mod(
-          constellation_points=2,
-          mod_code="gray",
-          differential=True,
-          samples_per_symbol=2,
-          excess_bw=0.35,
-          verbose=False,
-          log=False,
-        )
         # instantiate file sink
         fsnk = blocks.file_sink(itemsize=1,filename="/tmp/README")
-        # instantiate our block
-        blk = prototype.brain_cb()
         # connections
         self.connect(usrc,  demod)
         self.connect(demod, fsnk)
@@ -84,7 +85,7 @@ class qa_brain_cb(gr.top_block):
 def main():
     tb = qa_brain_cb()
     tb.start()
-    time.sleep(1)
+    time.sleep(100)
     tb.stop()
     tb.wait()
 

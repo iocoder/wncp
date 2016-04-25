@@ -41,7 +41,7 @@ class top_block(gr.top_block):
         )
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_center_freq(1241e6, 0)
-        self.uhd_usrp_sink_0.set_gain(100, 0)
+        self.uhd_usrp_sink_0.set_gain(200, 0)
         self.digital_psk_mod_0 = digital.psk.psk_mod(
           constellation_points=2,
           mod_code="gray",
@@ -66,10 +66,10 @@ class top_block(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_random_source_x_0, 0), (self.blks2_packet_encoder_0, 0))    
-        self.connect((self.blks2_packet_encoder_0, 0), (self.digital_psk_mod_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.uhd_usrp_sink_0, 0))    
-        self.connect((self.digital_psk_mod_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
+        self.connect((self.analog_random_source_x_0, 0), (self.blks2_packet_encoder_0, 0))
+        self.connect((self.blks2_packet_encoder_0, 0), (self.digital_psk_mod_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.uhd_usrp_sink_0, 0))
+        self.connect((self.digital_psk_mod_0, 0), (self.blocks_multiply_const_vxx_0, 0))
 
     def get_samp_rate(self):
         return self.samp_rate

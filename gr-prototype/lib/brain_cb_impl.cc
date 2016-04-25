@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -29,6 +30,9 @@
 #include "brain_cb_impl.h"
 
 #define MIN(a,b) (a<b?a:b)
+
+char hostname[256];
+FILE *fres = NULL;
 
 /******************************************************************************/
 /*                         Sender State Machine                               */
@@ -53,11 +57,11 @@ msg_to_send_t *send_buf_tail = NULL;
 int sender_state = SENDER_IDLE;
 int sender_step  = 0;
 
-void sched(double time, const char *msg) {
+void sched(double time, int len, const char *msg) {
     msg_to_send_t *msg_to_send = (msg_to_send_t*) malloc(sizeof(msg_to_send_t));
     msg_to_send->time = time;
-    msg_to_send->msg = (char *) malloc((msg_to_send->len = strlen(msg))+1);
-    strcpy(msg_to_send->msg, msg);
+    msg_to_send->msg = (char *) malloc((msg_to_send->len = len)+1);
+    memcpy(msg_to_send->msg, msg, len);
     msg_to_send->next = NULL;
     if (send_buf_head == NULL) {
         /* empty list */
@@ -65,6 +69,43 @@ void sched(double time, const char *msg) {
     } else {
         send_buf_tail->next = msg_to_send;
         send_buf_tail = msg_to_send;
+    }
+}
+
+void sched_chunked(double time, int rep, int len, const char *msg) {
+    int i, slen, chunk;
+    const char *smsg;
+    for (i = 0; i < rep; i++) {
+        slen = len;
+        smsg = msg;
+        while (slen) {
+            if (slen > 255) {
+                chunk = 255;
+            } else {
+                chunk = slen;
+            }
+            sched(time, chunk, smsg);
+            slen -= chunk;
+            smsg += chunk;
+        }
+    }
+}
+
+void sched_str(double time, int rep, const char *str) {
+    sched_chunked(time, rep, strlen(str), str);
+}
+
+void sched_file(double time, int rep, int size, const char *fname) {
+    int i;
+    char *buf;
+    FILE *f;
+    for (i = 0; i < rep; i++) {
+        buf = (char *) malloc(size);
+        f = fopen(fname, "r");
+        fread(buf, size, 1, f);
+        sched_chunked(time, 1, size, buf);
+        fclose(f);
+        free(buf);
     }
 }
 
@@ -104,10 +145,18 @@ int send(char *buf) {
         case SENDER_DATA:
             /* send data */
             *buf = send_buf_head->msg[sender_step];
+            /*if (fres) {
+                fprintf(fres, "%c", *buf);
+            }*/
             if (++sender_step == send_buf_head->len) {
                 /* done */
+                msg_to_send_t *tmp = send_buf_head;
+                send_buf_head = tmp->next;
+                free(tmp->msg);
+                free(tmp);
                 sender_state = SENDER_IDLE;
                 sender_step = 0;
+
             }
             break;
         default:
@@ -181,7 +230,10 @@ int recv(char bit) {
         case RECV_DATA:
             recv_msg[recv_step/8] = (recv_msg[recv_step/8]<<1)|bit;
             if (recv_step%8 == 7) {
-                printf("%c", recv_msg[recv_step/8]);
+                //printf("%c", recv_msg[recv_step/8]);
+                if (fres) {
+                    fprintf(fres, "%c", recv_msg[recv_step/8]);
+                }
             }
             if (++recv_step == recv_len*8) {
                 /* done */
@@ -216,7 +268,18 @@ namespace gr {
               gr::io_signature::make(0, 1, sizeof(char)), /* input */
               gr::io_signature::make(1, 1, sizeof(char))) /* output */
     {
-        sched(0.1, "This message is carried over radio waves!");
+        /* get hostname */
+        gethostname(hostname, sizeof(hostname));
+        printf("host: %s\n", hostname);
+        /* setup messages */
+        if (!strcmp(hostname, "node1u")) {
+            //sched_str(0.1, 1000, "This message is carried over radio waves!");
+            sched_file(0.1, 1, 0x100000, "/mnt/wncp/gr-prototype/music/music.raw");
+            //sched_file(0.1, 1000, 494, "/mnt/wncp/README");
+            //fres = fopen("/mnt/wncp/gr-prototype/music/sent.raw", "w");
+        } else /*if (!strcmp(hostname, "node2u"))*/ {
+            fres = fopen("/mnt/wncp/gr-prototype/music/sent.raw", "w");
+        }
     }
 
     /*
@@ -224,6 +287,8 @@ namespace gr {
      */
     brain_cb_impl::~brain_cb_impl()
     {
+        if (fres)
+            fclose(fres);
     }
 
     void
