@@ -21,27 +21,76 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
+from gnuradio import uhd
+from gnuradio import digital
+import time
 import prototype_swig as prototype
 
-class qa_brain_cb (gr_unittest.TestCase):
+class qa_brain_cb(gr.top_block):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def __init__(self):
+        # initialize
+        gr.top_block.__init__(self, "Top Block")
+        # set up sampling rate
+        self.samp_rate = 0.5e6
+        # instantiate usrp source
+        usrc = uhd.usrp_source(
+            ",".join(("", "")),
+            uhd.stream_args(cpu_format="fc32",channels=range(1))
+        )
+        usrc.set_samp_rate(self.samp_rate)
+        usrc.set_gain(100, 0)
+        usrc.set_center_freq(1.241e9, 0)
+        # instantiate psk demodulator
+        demod = digital.psk.psk_demod(
+          constellation_points=2,
+          differential=True,
+          samples_per_symbol=4,
+          excess_bw=0.35,
+          phase_bw=6.28/100.0,
+          timing_bw=6.28/100.0,
+          mod_code="gray",
+          verbose=False,
+          log=False
+        )
+        # instantiate our block
+        blk = prototype.brain_cb()
+        # instantiate psk modulator
+        mod = digital.psk.psk_mod(
+          constellation_points=2,
+          mod_code="gray",
+          differential=True,
+          samples_per_symbol=4,
+          excess_bw=0.35,
+          verbose=False,
+          log=False,
+        )
+        # instantiate usrp sink
+        usnk = uhd.usrp_sink(
+            ",".join(("", "")),
+            uhd.stream_args(cpu_format="fc32",channels=range(1)),
+        )
+        usnk.set_samp_rate(self.samp_rate)
+        usnk.set_gain(100, 0)
+        usnk.set_center_freq(1.241e9, 0)
+        # instantiate file sink
+        fsnk = blocks.file_sink(itemsize=1,filename="/tmp/README")
+        # connections
+        self.connect(usrc,  demod)
+        self.connect(demod, fsnk)
+        self.connect(demod, blk)
+        self.connect(blk,   mod)
+        self.connect(mod,   usnk)
 
-    def tearDown (self):
-        self.tb = None
-
-    def test_001_t (self):
-        # set up fg
-        # instantiate the binary sink
-        dst = blocks.null_sink(4);
-        # instantiate the block
-        myblock = prototype.brain_cb()
-        self.tb.connect(myblock,dst)
-        # run tb
-        self.tb.run ()
-        # check data
-
+def main():
+    tb = qa_brain_cb()
+    tb.start()
+    time.sleep(100)
+    tb.stop()
+    tb.wait()
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_brain_cb, "qa_brain_cb.xml")
+    main()
+
+#if __name__ == '__main__':
+#    gr_unittest.run(qa_brain_cb, "qa_brain_cb.xml")
