@@ -36,6 +36,8 @@ namespace gr {
       ~protocol_impl();
 
       // Where all the action really happens
+      void switch_channel(int new_channel, int trans);
+
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
 
       int general_work(int noutput_items,

@@ -221,7 +221,7 @@ int recv(char bit) {
         case RECV_LEN:
             recv_len = (recv_len<<1) | bit;
             if (++recv_step == 8) {
-                printf("Received (%d): ", recv_len);
+                //printf("Received (%d): ", recv_len);
                 recv_state++;
                 recv_step = 0;
                 recv_msg = (char *) malloc(recv_len);
@@ -237,7 +237,7 @@ int recv(char bit) {
             }
             if (++recv_step == recv_len*8) {
                 /* done */
-                printf("\n");
+                //printf("\n");
                 recv_state = RECV_SYNC;
                 recv_step = 0;
             }
@@ -274,7 +274,7 @@ namespace gr {
         /* setup messages */
         if (!strcmp(hostname, "node1u")) {
             //sched_str(0.1, 1000, "This message is carried over radio waves!");
-            sched_file(0.1, 1, 0x100000, "/mnt/wncp/gr-prototype/music/music.raw");
+            //sched_file(0.1, 1, 0x100000, "/mnt/wncp/gr-prototype/music/music.raw");
             //sched_file(0.1, 1000, 494, "/mnt/wncp/README");
             //fres = fopen("/mnt/wncp/gr-prototype/music/sent.raw", "w");
         } else /*if (!strcmp(hostname, "node2u"))*/ {

@@ -41,6 +41,8 @@ class qa_brain_cb(gr.top_block):
         usrc.set_samp_rate(self.samp_rate)
         usrc.set_gain(100, 0)
         usrc.set_center_freq(1.241e9, 0)
+        # instantiate complex to mag converter
+        pwr = blocks.complex_to_mag(1)
         # instantiate psk demodulator
         demod = digital.psk.psk_demod(
           constellation_points=2,
@@ -55,6 +57,8 @@ class qa_brain_cb(gr.top_block):
         )
         # instantiate our block
         blk = prototype.brain_cb()
+        # instantiate the brain
+        brain = prototype.protocol()
         # instantiate psk modulator
         mod = digital.psk.psk_mod(
           constellation_points=2,
@@ -75,17 +79,22 @@ class qa_brain_cb(gr.top_block):
         usnk.set_center_freq(1.241e9, 0)
         # instantiate file sink
         fsnk = blocks.file_sink(itemsize=1,filename="/tmp/README")
-        # connections
+        # straight connections
         self.connect(usrc,  demod)
         self.connect(demod, fsnk)
         self.connect(demod, blk)
         self.connect(blk,   mod)
         self.connect(mod,   usnk)
+        # gay connections
+        self.connect(usrc,  pwr)
+        self.connect(pwr,   brain)
+        self.msg_connect((brain, 'cmd'), (usrc, 'command'))
+        self.msg_connect((brain, 'cmd_trans'), (usnk, 'command'))
 
 def main():
     tb = qa_brain_cb()
     tb.start()
-    time.sleep(100)
+    time.sleep(1000)
     tb.stop()
     tb.wait()
 

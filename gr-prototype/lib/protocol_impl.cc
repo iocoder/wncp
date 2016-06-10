@@ -22,25 +22,33 @@
 #include "config.h"
 #endif
 
+#include <cstdio>
+
 #include <gnuradio/io_signature.h>
 #include "protocol_impl.h"
 
 #define MODE_IDLE       0
 #define MODE_TRANSIT    1
 #define MODE_SCANNING   2
+#define MODE_INIT       3
 
-static int mode = MODE_SCANNING;
+#define SAMPLES_COUNT   200000
+#define ITERS_COUNT     1
 
-static int channels[11] = {
-    2412, 2417, 2422, 2427, 2432,
-    2437, 2442, 2447, 2452, 2457,
-    2462
+static int mode = MODE_INIT;
+
+static double channels[11] = {
+    2.412e9, 2.417e9, 2.422e9, 2.427e9, 2.432e9,
+    2.437e9, 2.442e9, 2.447e9, 2.452e9, 2.457e9,
+    2.462e9
 };
 
-static int ranking[11] = {0};
+static float ranking[11] = {0};
 
 static int cur_channel = 0;
 static int no_samples  = 0;
+static int act_samples = 0;
+static int iteration   = 0;
 
 namespace gr {
   namespace prototype {
@@ -58,9 +66,11 @@ namespace gr {
     protocol_impl::protocol_impl()
       : gr::block("protocol",
               gr::io_signature::make(1, 1, sizeof(float)), /* input */
-              gr::io_signature::make(2, 2, sizeof(char))) /* output */ {
+              gr::io_signature::make(0, 1, sizeof(char)))  /* output */ {
         /* constructor */
         printf("Hello World!\n");
+        message_port_register_out(pmt::mp("cmd"));
+        message_port_register_out(pmt::mp("cmd_trans"));
     }
 
     /*
@@ -68,6 +78,23 @@ namespace gr {
      */
     protocol_impl::~protocol_impl()
     {
+    }
+
+    void
+    protocol_impl::switch_channel(int new_channel, int trans) {
+        double freq = channels[new_channel];
+        cur_channel = new_channel;
+        pmt::pmt_t command = pmt::cons(pmt::mp("freq"), pmt::mp(freq));
+        message_port_pub(pmt::mp("cmd"), command);
+        if (trans == 0) {
+            command = pmt::cons(pmt::mp("gain"), pmt::mp(0));
+            message_port_pub(pmt::mp("cmd_trans"), command);
+        } else {
+            command = pmt::cons(pmt::mp("freq"), pmt::mp(freq));
+            message_port_pub(pmt::mp("cmd_trans"), command);
+            command = pmt::cons(pmt::mp("gain"), pmt::mp(100));
+            message_port_pub(pmt::mp("cmd_trans"), command);
+        }
     }
 
     void
@@ -83,27 +110,81 @@ namespace gr {
                        gr_vector_void_star &output_items)
     {
       int nusrp_items = ninput_items[0];
+      int nuctl_items = noutput_items;
       const float *usrp_in = (const float *) input_items[0];
+      char *out = (char *) output_items[0];
 
       /* process input */
-      if (_ninput_items) {
+      if (nusrp_items) {
             if (mode == MODE_IDLE) {
 
             } else if (mode == MODE_TRANSIT) {
 
             } else if (mode == MODE_SCANNING) {
-
+                for (int i = 0; i < nusrp_items; i++) {
+                    //ranking[cur_channel] += usrp_in[i];
+                    if (usrp_in[i] > ranking[cur_channel])
+                        ranking[cur_channel] = usrp_in[i];
+                    act_samples++;
+                    if (++no_samples == SAMPLES_COUNT) {
+                        /* move to next channel */
+                        no_samples = 0;
+                        if (++cur_channel == 11) {
+                            cur_channel = 0;
+                            /* done */
+                            int selected = -1;
+                            if (++iteration == ITERS_COUNT) {
+                                iteration = 0;
+                                for (int j = 0; j < 11; j++) {
+                                    printf("channel %d: %f %d %f\n", j+1,
+                                           ranking[j], act_samples,
+                                           ranking[j]/act_samples);
+                                    if (selected == -1 && ranking[j] < 0.2)
+                                        selected = j;
+                                }
+                                if (selected == -1) {
+                                    printf("failed to find free channel!\n");
+                                } else {
+                                    printf("selected: %d\n", selected+1);
+                                    cur_channel = selected;
+                                    switch_channel(cur_channel, 1);
+                                }
+                                mode = MODE_IDLE;
+                            } else {
+                                /* switch to channel 0 */
+                                switch_channel(0, 0);
+                            }
+                        } else {
+                            /* switch to channel */
+                            switch_channel(cur_channel, 0);
+                        }
+                        act_samples = 0;
+                        break;
+                    }
+                }
+            } else if (mode == MODE_INIT) {
+                if (no_samples == 0) {
+                    switch_channel(0, 0);
+                }
+                no_samples += nusrp_items;
+                if (no_samples > 1000000) {
+                    cur_channel = 0;
+                    no_samples = 0;
+                    act_samples = 0;
+                    iteration = 0;
+                    mode = MODE_SCANNING;
+                    switch_channel(0, 0);
+                }
             }
       }
 
       /* how many input items were consumed? */
+      consume(0, ninput_items[0]);
+      //consume(1, ninput_items[1]);
 
-      char *out = (char *) output_items[0];
+      /* something to output? */
 
-      // Do <+signal processing+>
-      // Tell runtime system how many input items we consumed on
-      // each input stream.
-      consume_each (noutput_items);
+
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
