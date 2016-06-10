@@ -9,8 +9,11 @@
 
 %{
 #include "prototype/brain_cb.h"
+#include "prototype/protocol.h"
 %}
 
 
 %include "prototype/brain_cb.h"
 GR_SWIG_BLOCK_MAGIC2(prototype, brain_cb);
+%include "prototype/protocol.h"
+GR_SWIG_BLOCK_MAGIC2(prototype, protocol);

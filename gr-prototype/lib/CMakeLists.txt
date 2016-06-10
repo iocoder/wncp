@@ -27,6 +27,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND prototype_sources
     brain_cb_impl.cc
+    protocol_impl.cc
 )
 
 set(prototype_sources "${prototype_sources}" PARENT_SCOPE)

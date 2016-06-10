@@ -18,5 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    prototype_brain_cb.xml DESTINATION share/gnuradio/grc/blocks
+    prototype_brain_cb.xml
+    prototype_protocol.xml DESTINATION share/gnuradio/grc/blocks
 )

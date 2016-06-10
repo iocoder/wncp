@@ -22,5 +22,6 @@
 ########################################################################
 install(FILES
     api.h
-    brain_cb.h DESTINATION include/prototype
+    brain_cb.h
+    protocol.h DESTINATION include/prototype
 )
