@@ -31,8 +31,18 @@
 
 #define MIN(a,b) (a<b?a:b)
 
+#define MODE_ENABLED   1
+#define MODE_DISABLED  0
+
 char hostname[256];
 FILE *fres = NULL;
+
+static int mode = MODE_DISABLED;
+static int debug = 0;
+static int trials = 0;
+
+unsigned long long curtime = 0;
+unsigned long long lasttime = 0;
 
 /******************************************************************************/
 /*                         Sender State Machine                               */
@@ -43,6 +53,7 @@ FILE *fres = NULL;
 #define SENDER_ZERO     2
 #define SENDER_LEN      3
 #define SENDER_DATA     4
+#define SENDER_ACK      5
 
 typedef struct msg_to_send {
     struct msg_to_send *next;
@@ -56,6 +67,10 @@ msg_to_send_t *send_buf_tail = NULL;
 
 int sender_state = SENDER_IDLE;
 int sender_step  = 0;
+
+int acked = 0;
+int send_ack = 0;
+int retries = 0;
 
 void sched(double time, int len, const char *msg) {
     msg_to_send_t *msg_to_send = (msg_to_send_t*) malloc(sizeof(msg_to_send_t));
@@ -110,20 +125,30 @@ void sched_file(double time, int rep, int size, const char *fname) {
 }
 
 int send(char *buf) {
+    msg_to_send_t *tmp;
+    if (!mode) {
+        *buf = 0;
+        return 1;
+    }
     switch(sender_state) {
         case SENDER_IDLE:
             /* idle time */
             if (send_buf_head) {
                 /* something to send */
                 sender_state++;
+                sender_step = 0;
             } else {
                 /* nothing to send */
-                return 0;
+                *buf = 0;
+                return 1;
             }
         case SENDER_SYNC:
             /* sync pattern */
-            *buf = 0x55;
-            if (++sender_step == 6) {
+            if (sender_step < 8)
+                *buf = 0x00;
+            else
+                *buf = 0x55;
+            if (++sender_step == 14) {
                 /* 6*8=48 sync bits sent */
                 sender_state++;
                 sender_step = 0;
@@ -150,14 +175,35 @@ int send(char *buf) {
             }*/
             if (++sender_step == send_buf_head->len) {
                 /* done */
-                msg_to_send_t *tmp = send_buf_head;
-                send_buf_head = tmp->next;
-                free(tmp->msg);
-                free(tmp);
-                sender_state = SENDER_IDLE;
-                sender_step = 0;
-
+                sender_state = SENDER_ACK;
+                sender_step  = 0;
+                trials = 0;
+                lasttime = curtime;
             }
+            break;
+        case SENDER_ACK:
+            /* wait for an ack */
+            if (!acked) {
+                if (curtime - lasttime < 10000) {
+                    *buf = 0;
+                    return 0;
+                } else {
+                    printf("retired!\n");
+                    retries++;
+                    if (retries == 10) {
+                        /* here we go */
+                        mode = MODE_DISABLED;
+                        retries = 0;
+                    }
+                }
+            }
+            tmp = send_buf_head;
+            send_buf_head = tmp->next;
+            free(tmp->msg);
+            free(tmp);
+            sender_state = SENDER_IDLE;
+            sender_step = 0;
+            acked = 0;
             break;
         default:
             break;
@@ -208,7 +254,12 @@ int recv(char bit) {
                     recv_len = 0;
                 }
             } else {
-                if (recv_step == 1) {
+                printf("\n");
+                if (recv_step == 0) {
+                    /* 010101|1 */
+                    recv_state = RECV_SYNC;
+                    recv_step = 0;
+                } else if (recv_step == 1) {
                     /* 010101|01 */
                     recv_step = 0;
                 } else {
@@ -221,25 +272,33 @@ int recv(char bit) {
         case RECV_LEN:
             recv_len = (recv_len<<1) | bit;
             if (++recv_step == 8) {
-                //printf("Received (%d): ", recv_len);
+                printf("Received (%d): ", recv_len);
                 recv_state++;
                 recv_step = 0;
                 recv_msg = (char *) malloc(recv_len);
+                if (!recv_len) {
+                    /* it is an ACK */
+                    acked = 1;
+                    printf("\n");
+                    recv_state = RECV_SYNC;
+                    recv_step = 0;
+                }
             }
             break;
         case RECV_DATA:
             recv_msg[recv_step/8] = (recv_msg[recv_step/8]<<1)|bit;
             if (recv_step%8 == 7) {
-                //printf("%c", recv_msg[recv_step/8]);
+                printf("%c", recv_msg[recv_step/8]);
                 if (fres) {
                     fprintf(fres, "%c", recv_msg[recv_step/8]);
                 }
             }
             if (++recv_step == recv_len*8) {
                 /* done */
-                //printf("\n");
+                printf("\n");
                 recv_state = RECV_SYNC;
                 recv_step = 0;
+                send_ack = 1;
             }
             break;
         default:
@@ -268,6 +327,11 @@ namespace gr {
               gr::io_signature::make(0, 1, sizeof(char)), /* input */
               gr::io_signature::make(1, 1, sizeof(char))) /* output */
     {
+        /* MPI */
+        message_port_register_out(pmt::mp("ctl_out"));
+        message_port_register_in(pmt::mp("ctl_in"));
+        set_msg_handler(pmt::mp("ctl_in"),
+            boost::bind(&brain_cb_impl::ctl_in, this, _1));
         /* get hostname */
         gethostname(hostname, sizeof(hostname));
         printf("host: %s\n", hostname);
@@ -275,7 +339,7 @@ namespace gr {
         if (!strcmp(hostname, "node1u")) {
             //sched_str(0.1, 1000, "This message is carried over radio waves!");
             //sched_file(0.1, 1, 0x100000, "/mnt/wncp/gr-prototype/music/music.raw");
-            //sched_file(0.1, 1000, 494, "/mnt/wncp/README");
+            sched_file(0.1, 1000, 494, "/mnt/wncp/README");
             //fres = fopen("/mnt/wncp/gr-prototype/music/sent.raw", "w");
         } else /*if (!strcmp(hostname, "node2u"))*/ {
             fres = fopen("/mnt/wncp/gr-prototype/music/sent.raw", "w");
@@ -289,6 +353,22 @@ namespace gr {
     {
         if (fres)
             fclose(fres);
+    }
+
+    void
+    brain_cb_impl::ctl_in(pmt::pmt_t msg) {
+        printf("protocol received a message!\n");
+        mode = MODE_ENABLED;
+        recv_state = RECV_SYNC;
+        recv_step  = 0;
+        recv_len   = 0;
+    }
+
+    void
+    brain_cb_impl::ctl_out(int msg) {
+        printf("protocol sends a message!\n");
+        pmt::pmt_t command = pmt::cons(pmt::mp("cmd"), pmt::mp(1));
+        message_port_pub(pmt::mp("ctl_out"), command);
     }
 
     void
@@ -310,26 +390,48 @@ namespace gr {
         int _noutput_items = noutput_items;
         const char *in = (const char *) input_items[0];
         char *out = (char *) output_items[0];
-        int i;
+        int i, j = 0;
+        int premode = mode;
 
         // consume input
         for (i = 0; i < _ninput_items; i++) {
             recv(in[i]);
+            curtime++;
+            if (send_ack) {
+                if (_noutput_items - j > 11) {
+                    out[j++] = 0x00;
+                    out[j++] = 0x55;
+                    out[j++] = 0x55;
+                    out[j++] = 0x55;
+                    out[j++] = 0x55;
+                    out[j++] = 0x55;
+                    out[j++] = 0x55;
+                    out[j++] = 0x00;
+                    out[j++] = 0x00;
+                    out[j++] = 0x00;
+                    out[j++] = 0x00;
+                    send_ack = 0;
+                }
+            }
         }
 
         // tell runtime system how many input items we consumed
         consume_each(_ninput_items);
 
         // output something
-        for (i = 0; i < _noutput_items; i++) {
-            if (!send(&out[i])) {
+        for (; j < _noutput_items; j++) {
+            if (!send(&out[j])) {
                 /* nothing to send */
                 break;
             }
+            //printf("sending 0x%02X\n", out[i]);
+        }
+        if (premode && !mode) {
+            ctl_out(0);
         }
 
         // tell runtime system how many output items we produced.
-        return i;
+        return j;
     }
 
   } /* namespace prototype */

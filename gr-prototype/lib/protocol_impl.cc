@@ -38,7 +38,7 @@
 static int mode = MODE_INIT;
 
 static double channels[11] = {
-    2.412e9, 2.417e9, 2.422e9, 2.427e9, 2.432e9,
+    1.412e9, 2.417e9, 2.422e9, 2.427e9, 2.432e9,
     2.437e9, 2.442e9, 2.447e9, 2.452e9, 2.457e9,
     2.462e9
 };
@@ -71,6 +71,10 @@ namespace gr {
         printf("Hello World!\n");
         message_port_register_out(pmt::mp("cmd"));
         message_port_register_out(pmt::mp("cmd_trans"));
+        message_port_register_out(pmt::mp("ctl_out"));
+        message_port_register_in(pmt::mp("ctl_in"));
+        set_msg_handler(pmt::mp("ctl_in"),
+            boost::bind(&protocol_impl::ctl_in, this, _1));
     }
 
     /*
@@ -98,6 +102,19 @@ namespace gr {
     }
 
     void
+    protocol_impl::ctl_in(pmt::pmt_t msg) {
+        printf("brain received a message!\n");
+        mode = MODE_INIT;
+    }
+
+    void
+    protocol_impl::ctl_out(int msg) {
+        printf("brain sends a message!\n");
+        pmt::pmt_t command = pmt::cons(pmt::mp("cmd"), pmt::mp(1));
+        message_port_pub(pmt::mp("ctl_out"), command);
+    }
+
+    void
     protocol_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
@@ -117,7 +134,13 @@ namespace gr {
       /* process input */
       if (nusrp_items) {
             if (mode == MODE_IDLE) {
-
+                if (no_samples < 0) {
+                } else if (no_samples > 1000000) {
+                    ctl_out(1);
+                    no_samples = -1;
+                } else {
+                    no_samples += nusrp_items;
+                }
             } else if (mode == MODE_TRANSIT) {
 
             } else if (mode == MODE_SCANNING) {
@@ -139,7 +162,7 @@ namespace gr {
                                     printf("channel %d: %f %d %f\n", j+1,
                                            ranking[j], act_samples,
                                            ranking[j]/act_samples);
-                                    if (selected == -1 && ranking[j] < 0.2)
+                                    if (selected == -1 && ranking[j] < 0.4)
                                         selected = j;
                                 }
                                 if (selected == -1) {
@@ -150,6 +173,7 @@ namespace gr {
                                     switch_channel(cur_channel, 1);
                                 }
                                 mode = MODE_IDLE;
+                                no_samples = 0;
                             } else {
                                 /* switch to channel 0 */
                                 switch_channel(0, 0);

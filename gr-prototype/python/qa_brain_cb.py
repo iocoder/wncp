@@ -39,7 +39,7 @@ class qa_brain_cb(gr.top_block):
             uhd.stream_args(cpu_format="fc32",channels=range(1))
         )
         usrc.set_samp_rate(self.samp_rate)
-        usrc.set_gain(100, 0)
+        usrc.set_gain(200, 0)
         usrc.set_center_freq(1.241e9, 0)
         # instantiate complex to mag converter
         pwr = blocks.complex_to_mag(1)
@@ -47,7 +47,7 @@ class qa_brain_cb(gr.top_block):
         demod = digital.psk.psk_demod(
           constellation_points=2,
           differential=True,
-          samples_per_symbol=4,
+          samples_per_symbol=2,
           excess_bw=0.35,
           phase_bw=6.28/100.0,
           timing_bw=6.28/100.0,
@@ -64,18 +64,20 @@ class qa_brain_cb(gr.top_block):
           constellation_points=2,
           mod_code="gray",
           differential=True,
-          samples_per_symbol=4,
+          samples_per_symbol=2,
           excess_bw=0.35,
           verbose=False,
           log=False,
         )
+        # instantiate multiplier
+        mul = blocks.multiply_const_vcc((0.5, ))
         # instantiate usrp sink
         usnk = uhd.usrp_sink(
             ",".join(("", "")),
             uhd.stream_args(cpu_format="fc32",channels=range(1)),
         )
         usnk.set_samp_rate(self.samp_rate)
-        usnk.set_gain(100, 0)
+        usnk.set_gain(200, 0)
         usnk.set_center_freq(1.241e9, 0)
         # instantiate file sink
         fsnk = blocks.file_sink(itemsize=1,filename="/tmp/README")
@@ -84,12 +86,15 @@ class qa_brain_cb(gr.top_block):
         self.connect(demod, fsnk)
         self.connect(demod, blk)
         self.connect(blk,   mod)
-        self.connect(mod,   usnk)
+        self.connect(mod,   mul)
+        self.connect(mul,   usnk)
         # gay connections
         self.connect(usrc,  pwr)
         self.connect(pwr,   brain)
         self.msg_connect((brain, 'cmd'), (usrc, 'command'))
         self.msg_connect((brain, 'cmd_trans'), (usnk, 'command'))
+        self.msg_connect((brain, 'ctl_out'), (blk, 'ctl_in'))
+        self.msg_connect((blk, 'ctl_out'), (brain, 'ctl_in'))
 
 def main():
     tb = qa_brain_cb()
